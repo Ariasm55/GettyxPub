@@ -1,0 +1,23 @@
+﻿@layout MainLayout
+@page "/Account/logout"
+
+@using GettyX.Web.Interfaces
+@inject IUsersService userService
+@inject NavigationManager navigator
+
+
+<h1>Logging out...</h1>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        if(await userService.LogOut())
+        {
+            navigator.NavigateTo("/");
+        }
+    }
+
+   
+
+}

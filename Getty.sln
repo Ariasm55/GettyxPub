@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31919.166
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Getty.Core", "Getty.Core\Getty.Core.csproj", "{08D90C35-5E89-4375-B071-47953DA1C33B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Getty.Infrastructure", "Getty.Infrastructure\Getty.Infrastructure.csproj", "{ACEEC2AE-23F9-4AE0-8982-79772EFD8EE0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{E0A47C47-76CE-4DDD-9B13-4EFE4B5ACB70}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Getty.UnitTests", "Getty.UnitTest\Getty.UnitTests.csproj", "{45F424FD-ADE6-4DD2-9D63-9B8A7F8188D3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Getty.IntegrationTests", "Getty.IntegrationTests\Getty.IntegrationTests.csproj", "{7EC44EB7-E7A2-415D-A182-BC1F77CA7E1B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettyX.Api", "GettyX.Api\GettyX.Api.csproj", "{A44B3D4A-FE42-4A82-B084-C90496E292E3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GettyX.Web", "GettyX.Web\GettyX.Web.csproj", "{14079C1D-4F06-4D10-AD75-535756D37EAA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{08D90C35-5E89-4375-B071-47953DA1C33B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{08D90C35-5E89-4375-B071-47953DA1C33B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{08D90C35-5E89-4375-B071-47953DA1C33B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{08D90C35-5E89-4375-B071-47953DA1C33B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ACEEC2AE-23F9-4AE0-8982-79772EFD8EE0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ACEEC2AE-23F9-4AE0-8982-79772EFD8EE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ACEEC2AE-23F9-4AE0-8982-79772EFD8EE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ACEEC2AE-23F9-4AE0-8982-79772EFD8EE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{45F424FD-ADE6-4DD2-9D63-9B8A7F8188D3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{45F424FD-ADE6-4DD2-9D63-9B8A7F8188D3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{45F424FD-ADE6-4DD2-9D63-9B8A7F8188D3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{45F424FD-ADE6-4DD2-9D63-9B8A7F8188D3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EC44EB7-E7A2-415D-A182-BC1F77CA7E1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EC44EB7-E7A2-415D-A182-BC1F77CA7E1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EC44EB7-E7A2-415D-A182-BC1F77CA7E1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EC44EB7-E7A2-415D-A182-BC1F77CA7E1B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A44B3D4A-FE42-4A82-B084-C90496E292E3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A44B3D4A-FE42-4A82-B084-C90496E292E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A44B3D4A-FE42-4A82-B084-C90496E292E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A44B3D4A-FE42-4A82-B084-C90496E292E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{14079C1D-4F06-4D10-AD75-535756D37EAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{14079C1D-4F06-4D10-AD75-535756D37EAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{14079C1D-4F06-4D10-AD75-535756D37EAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{14079C1D-4F06-4D10-AD75-535756D37EAA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{45F424FD-ADE6-4DD2-9D63-9B8A7F8188D3} = {E0A47C47-76CE-4DDD-9B13-4EFE4B5ACB70}
+		{7EC44EB7-E7A2-415D-A182-BC1F77CA7E1B} = {E0A47C47-76CE-4DDD-9B13-4EFE4B5ACB70}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A60BFC6E-1DCE-45D1-86F6-D78D3C2E8550}
+	EndGlobalSection
+EndGlobal

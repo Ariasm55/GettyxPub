@@ -1,0 +1,354 @@
+﻿
+@layout MainLayout
+@page "/Dashboard"
+@using Getty.Core.DTOs
+@using System.Timers
+@using GettyX.Web.Interfaces
+@*@implements IDisposable*@
+@inject IDashboardService dashboard
+
+<PageTitle>Dashboard   </PageTitle>
+
+<MudContainer Class="py-4" Fixed="true">
+    <MudGrid>
+        <MudItem xs="12"  lg="8">
+                <MudItem lg="12" >
+                         <MudPaper Square="true">
+                                   <div class="">
+                                       <MudList>
+                                                <MudListItem Icon="@Icons.Material.Filled.CalendarToday" IconColor="Color.Primary" >
+                                                     <MudText Align="Align.Center" Typo="Typo.h6">Today's Schedule</MudText> 
+                                                     <MudText Align="Align.Center" Typo="Typo.body2">
+                                                        @if(StartTime == EndtTime)
+                                                        {
+                                                            <span>Off</span>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@StartTime.ToString("hh:mm tt") - @EndtTime.ToString("hh:mm tt") </span>
+                                                        }                                 
+                                                         
+                                                     </MudText>
+                                                </MudListItem>
+                                                <MudDivider DividerType="DividerType.FullWidth" />
+                                                <MudListItem >
+                                                       <div class="d-flex justify-content-evenly align-items-center  " style="margin-left:30px"> 
+
+                                                           <MudIconButton Icon="@Icons.Material.Filled.PunchClock" Disabled="@PunchDisabled" Color="@PunchColor" @onclick="@(() => PunchedClock())" ></MudIconButton>
+
+                                                        @*<MudToggleIconButton Toggled="@PunchedIn"  Class="mr-2" Icon="@Icons.Material.Filled.PunchClock" @onchange="" Color="@Color.Default"
+                                                         ToggledIcon="@Icons.Material.Filled.PunchClock" ToggledColor="@Color.Info"  >
+                                                        </MudToggleIconButton>*@
+                                                      <MudBadge Origin="Origin.TopRight" Visible="true"  Class="mr-2" 
+                                                            Color="@BadgeStatusColor" Overlap="true" Bordered="true" >
+                                                             <MudChip Label="true" Color="@BadgeStatusColor"> @SessionStatus</MudChip>
+                                                        </MudBadge>                                   
+                                                        <MudMenu Dense="true" Disabled="@BreakDisabled"   Icon="@Icons.Material.Filled.FreeBreakfast" >
+                                                            <MudMenuItem OnClick="@(() => BreakHit("Break"))" >Break</MudMenuItem>
+                                                            <MudMenuItem OnClick="@(() => BreakHit("Lunch"))" >Lunch</MudMenuItem>
+                                                        </MudMenu>
+                                                </div>
+                                                </MudListItem>
+                         
+                             
+                                            </MudList>
+                                   </div>
+                                </MudPaper>
+
+                </MudItem>
+                <div class="mt-6"></div>
+                <MudItem lg="12">
+                      <MudPaper Square="true">
+                                <MudCardHeader>
+                                    <CardHeaderContent>
+                                        <div style="text-align:center;">
+                                               <MudText Typo="Typo.h5">@DateTime.Now.ToLongDateString()</MudText>
+                                        </div>
+                 
+                                    </CardHeaderContent>
+                                </MudCardHeader>
+                                 <MudDivider DividerType="DividerType.FullWidth" />
+                                <MudList Class="justify-content-center" >
+                                    <MudListItem>    
+                                        <MudText Align="Align.Center" Typo="Typo.body1">
+                                               <MudChip Variant="Variant.Text" Color="Color.Secondary">Time</MudChip>
+                                                @Timer</MudText>                
+                                        </MudListItem>
+                                </MudList>
+                            </MudPaper>
+
+                </MudItem>
+        </MudItem>
+         <MudItem xs="12" lg="4">
+            <MudPaper Square="true">
+               <div class="">
+                   <MudList>
+                            <MudListItem Icon="@Icons.Material.Filled.List" IconColor="Color.Primary">
+                                 <MudText Align="Align.Center" Typo="Typo.h6">Today's punches</MudText> 
+                            </MudListItem>
+                            <MudDivider DividerType="DividerType.FullWidth" />
+                           
+                                        @foreach(var punch in Punches)
+                                        {
+                                                Color punchColor = Color.Warning;
+
+                                                if(punch.PnchDescrption == "IN" || punch.PnchDescrption == "OUT")
+                                                {
+                                                    punchColor = Color.Info;
+
+                                                }
+
+                                                 <MudListItem>                                
+                                                       <MudText Align="Align.Center" Typo="Typo.body1">
+                                                           <MudChip Variant="Variant.Text" Color="punchColor">@punch.PnchDescrption</MudChip>
+                                                            @Convert.ToDateTime(punch.PnchDate).ToString("hh:mm tt")
+                                                       </MudText>
+                                                </MudListItem>                       
+                           
+                                        }
+                   
+                        </MudList>
+               </div>
+            </MudPaper>
+        </MudItem>
+       
+        <MudItem xs="12">
+
+            <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="true" PanelClass="pa-6">
+                <MudTabPanel Text="Weekly Schedule">
+                 
+                        @if(Week.Count() == 0)
+                            {
+                                <MudAlert Severity="Severity.Warning">No Schedule</MudAlert>
+                        
+                            }else{
+
+                                 <MudTable Class="mudtable-noborders" Style="border:none;" Items="@Week" Hover="true" Breakpoint="Breakpoint.Sm" Striped="true" Outlined="true" >
+                                        <HeaderContent>
+                                            <MudTh>Day</MudTh>
+                                            <MudTh>In</MudTh>
+                                            <MudTh>Out</MudTh>
+                                        </HeaderContent>
+                                        <RowTemplate>
+                                            <MudTd DataLabel="Day">@context.SchdDayDescription</MudTd>
+                                            @if(context.SchdStartTime == context.SchdEndTime)
+                                            {
+                                                <MudTd DataLabel="In">Off</MudTd>
+                                                <MudTd DataLabel="Out">Off</MudTd>
+                                            }
+                                            else
+                                            {
+                                                <MudTd DataLabel="In">@Convert.ToDateTime(context.SchdStartTime).ToString("hh:mm tt")</MudTd>
+                                                <MudTd DataLabel="Out">@Convert.ToDateTime(context.SchdEndTime).ToString("hh:mm tt")</MudTd>
+                                            }
+                            
+                                        </RowTemplate>
+                                    </MudTable>
+
+                            }
+
+                    
+
+
+
+                </MudTabPanel>
+                <MudTabPanel Text="Week Report">
+                    <MudText>WIP</MudText>
+                </MudTabPanel>
+                
+            </MudTabs>
+
+
+            <MudPaper >
+           
+
+             </MudPaper>
+        </MudItem>
+    </MudGrid>
+</MudContainer>
+
+
+
+@code {
+    public Timer  timer;
+
+    public bool PunchedIn { get; set; }
+    public bool BreakDisabled { get; set; }
+    public bool PunchDisabled = false;
+    public List<SchdScheduleDayDTO> Week = new List<SchdScheduleDayDTO>();
+    public List<PnchPunchClockDTO> Punches = new List<PnchPunchClockDTO>();
+    public PnchPunchClockDTO LastPunch = new PnchPunchClockDTO();
+
+    public UserIdentityDTO UserInfo = new UserIdentityDTO();
+
+    private string? SessionStatus = "Off";
+    private string Timer = "00h 00m 00s";
+    private string PausedTime = "00h 00m 00s";
+    private Color PunchColor;
+    private Color BadgeStatusColor;
+    private int TodaysDay = (int)DateTime.Now.DayOfWeek;
+
+
+    private DateTime StartTime = new DateTime();
+    private DateTime EndtTime = new DateTime();
+    private DateTime LastPunchTime = new DateTime();
+
+
+    //public void Dispose()
+    //{
+    //    timer.Dispose();
+    //}
+
+    protected override async Task OnInitializedAsync()
+    {
+        //Get Username in session to get dashboard information
+        UserInfo = await dashboard.GetUsername();
+
+        //Getting Week/Punches From Api
+        Week = await dashboard.GetCurrentSchedule(UserInfo.UserName);
+        Punches = await dashboard.TodayPunches(UserInfo.UserName); 
+
+
+        if (Week.Count() != 0)
+        {
+            var TodaysTime = Week.Where(x => x.SchdNumberOfDay == TodaysDay).First();
+            StartTime = Convert.ToDateTime(TodaysTime.SchdStartTime);
+            EndtTime = Convert.ToDateTime(TodaysTime.SchdEndTime);
+
+            //Defining the Status of the sewssion based on last punch
+            if(Punches.Count() == 0)
+            {
+                //Status OFF
+                SessionStatus = "Off";
+            }
+            else
+            {
+                //Status - Last Punch
+                LastPunch = Punches.OrderByDescending(x=>x.PnchDate).First();
+                SessionStatus = LastPunch.PnchDescrption;  
+
+                RefreshTimer();
+            }
+            //Change COmponents properties
+            ComponetsChanger(SessionStatus);
+        }
+
+
+
+    }
+
+
+    public void RefreshTimer()
+    {
+        LastPunchTime = LastPunch.PnchDate;
+        //Timer for last punch
+        timer = new Timer();
+        timer.Interval = 1000;
+        timer.Elapsed += OnTimerElapsed;
+        timer.Enabled = true;
+    }
+
+    public void OnTimerElapsed(object? sender , ElapsedEventArgs e)
+    {
+        var elapsed = DateTime.Now.TimeOfDay - LastPunchTime.TimeOfDay;
+
+        Timer = string.Format("{0:D2}h {1:D2}m {2:D2}s", elapsed.Hours, elapsed.Minutes, elapsed.Seconds);
+        InvokeAsync(() =>
+        {
+            StateHasChanged();
+
+        });
+    }
+    public void ComponetsChanger(string status)
+    {
+
+        //Change Components
+        if(status == "IN")
+        {
+            PunchedIn = true;
+            PunchColor = Color.Info;
+            BadgeStatusColor = Color.Success;
+            BreakDisabled = false;  
+
+        }else if(status == "OUT")
+        {
+            PunchedIn = false;
+            PunchColor = Color.Default;
+            BreakDisabled = true;
+            BadgeStatusColor = Color.Default;
+
+        }else if(status == "Off")
+        {
+            PunchedIn = false;
+            PunchColor = Color.Default;
+            BreakDisabled = true;
+
+        }else
+        {
+            PunchedIn = false;
+            PunchColor = Color.Default;
+            BreakDisabled = false;
+            BadgeStatusColor = Color.Warning;
+        }
+
+        SessionStatus = status;
+
+    }
+
+    public async void PunchedClock()
+    {
+
+        PunchedIn = !PunchedIn;
+        SessionStatus = (PunchedIn) ? "IN" : "OUT" ;
+        ComponetsChanger(SessionStatus);
+        //dashboard.SetSessionStatus(SessionStatus);
+
+        PnchPunchClockDTO punch = new PnchPunchClockDTO()
+            {
+                PnchDate = DateTime.Now,
+                PnchEmpId = Convert.ToInt32(UserInfo.EmpID),
+                PnchDescrption = SessionStatus
+            };
+
+        await dashboard.InsertPunch(punch);
+
+        //Getting the most recent punch
+
+        var PunchesAsync = await dashboard.TodayPunches(UserInfo.UserName);
+
+        Punches = PunchesAsync;
+        LastPunch =  Punches.OrderByDescending(x=>x.PnchDate).First();
+        RefreshTimer();
+        
+        
+    }
+
+    public async void BreakHit(string breakType)
+    {
+        ComponetsChanger(breakType);
+
+        //dashboard.SetSessionStatus(SessionStatus);
+        PnchPunchClockDTO punch = new PnchPunchClockDTO()
+            {
+                PnchDate = DateTime.Now,
+                PnchEmpId = Convert.ToInt32(UserInfo.EmpID),
+                PnchDescrption = breakType
+            };
+
+        //InsertingPunch
+        await dashboard.InsertPunch(punch);
+
+        //Getting the most recent punch
+        var PunchesAsync = await dashboard.TodayPunches(UserInfo.UserName);
+
+        Punches = PunchesAsync;
+        LastPunch = Punches.OrderByDescending(x=>x.PnchDate).First();
+        
+        RefreshTimer();
+        
+    }
+
+    
+
+  
+}

@@ -1,0 +1,36 @@
+﻿@page "/schedules/schedulemanagement"
+@layout MainLayout
+@using GettyX.Web.Interfaces
+@using Getty.Core.DTOs
+@inject IScheduleServices scheduleservice
+@inject ISnackbar Snackbarz
+
+
+
+    <MudCard>
+    <MudCardHeader>
+            <MudText Typo="Typo.h6" > Add / Edit Schedule </MudText>
+    </MudCardHeader>
+    <MudCardContent>
+      @*  <MudTextField @bind-Value="Employee.EmpFirstName" Label="First Name" 
+        Variant="Variant.Text" Margin="Margin.Normal" ></MudTextField>
+        <MudTextField @bind-Value="Employee.EmpLastName" Label="Last Name" 
+        Variant="Variant.Text" Margin="Margin.Normal" ></MudTextField>
+        <MudTextField @bind-Value="Employee.EmpStsId" Label="Site" 
+        Variant="Variant.Text" Margin="Margin.Normal" ></MudTextField>
+        <MudTextField @bind-Value="Employee.EmpStatus" Label="Status" 
+        Variant="Variant.Text" Margin="Margin.Normal" ></MudTextField>
+        <br />
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="SaveSchedule" >
+            Save Schedule
+        </MudButton>*@
+    </MudCardContent>
+</MudCard>
+
+
+<br  />
+
+@code {
+
+
+}

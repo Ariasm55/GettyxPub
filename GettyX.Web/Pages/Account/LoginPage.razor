@@ -1,0 +1,97 @@
+﻿@layout LoginLayout
+@page "/"
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+@using GettyX.Web.Interfaces
+
+@inject IUsersService userService
+@inject NavigationManager navigator
+@inject ISnackbar Snackbar
+
+
+<AuthorizeView >
+
+</AuthorizeView>
+        <MudCard>
+            <MudCardHeader>
+                <CardHeaderContent>
+                    <MudText Align="Align.Center" Typo="Typo.h6">Welcome to GettyX</MudText>
+                </CardHeaderContent>
+            </MudCardHeader>
+            <MudCardContent>   
+
+                      <MudTextField T="string" Label="Username" Required="true" @ref="username"
+                      @bind-Value="model.UsrUsername" For="@(() => model.UsrUsername)"
+                                          RequiredError="User name is required!"/>
+                      <MudTextField T="string" Label="Password" Required="true"  @ref="password"
+                      @bind-Value ="model.UsrPassword" For="@(() => model.UsrPassword)"
+                                          InputType="InputType.Password" 
+                                          RequiredError="Password is required!"/>          
+       
+      
+            </MudCardContent>
+            <MudCardActions Class="justify-content-center">
+                   <div class="d-flex align-center justify-content-center mt-6">
+                                <MudButton Disabled="@_processing" ButtonType="ButtonType.Button" OnClick="RequestLogIn" 
+                                Variant="Variant.Filled" Color="Color.Primary"  Class="ml-auto">
+                                @if (_processing)
+                                        {
+                                            <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true"/>
+                                            <MudText Class="ms-2">Processing</MudText>
+                                        }
+                                        else
+                                        {
+                                            <MudText>Log In</MudText>
+                                        }
+
+
+                            </MudButton>
+
+
+                            </div>
+            </MudCardActions>
+        </MudCard>
+
+
+
+
+@code {
+
+    MudTextField<string> username;
+    MudTextField<string> password;
+    private bool _processing = false;
+
+    public Getty.Core.DTOs.UserLoginDTO model = new Getty.Core.DTOs.UserLoginDTO();     
+
+    async Task RequestLogIn()
+    {
+        model.UsrUsername = username.Value;
+        model.UsrPassword = password.Value;
+
+        _processing = true;
+        var result = await userService.Authentication(model);
+
+
+        if (result)
+        {
+            navigator.NavigateTo("/Dashboard");
+
+        }
+        else
+        { 
+            
+            Snackbar.Configuration.PositionClass = Defaults.Classes.Position.BottomLeft;
+            Snackbar.Add("Invalid Credentials" , Severity.Error );
+            _processing = false;
+
+            
+        }
+
+       
+        
+    }
+
+
+ 
+
+}

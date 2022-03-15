@@ -1,0 +1,140 @@
+﻿
+@page "/employee/employeemanagement"
+
+@layout MainLayout
+@using GettyX.Web.Interfaces
+@using Getty.Core.DTOs
+@inject IEmployeeService employeeservice
+@inject ISnackbar Snackbarz
+
+
+
+    <MudCard>
+    <MudCardHeader>
+            <MudText Typo="Typo.h6" > Add / Edit Employee </MudText>
+    </MudCardHeader>
+    <MudCardContent>
+        <MudTextField @bind-Value="Employee.EmpFirstName" Label="First Name" 
+        Variant="Variant.Text" Margin="Margin.Normal" ></MudTextField>
+        <MudTextField @bind-Value="Employee.EmpLastName" Label="Last Name" 
+        Variant="Variant.Text" Margin="Margin.Normal" ></MudTextField>
+        <MudTextField @bind-Value="Employee.EmpStsId" Label="Site" 
+        Variant="Variant.Text" Margin="Margin.Normal" ></MudTextField>
+        <MudTextField @bind-Value="Employee.EmpStatus" Label="Status" 
+        Variant="Variant.Text" Margin="Margin.Normal" ></MudTextField>
+        <br />
+        <MudButton Variant="Variant.Filled" Color="Color.Success" OnClick="SaveEmployee" >
+            Save Employee
+        </MudButton>
+    </MudCardContent>
+</MudCard>
+
+
+<br  />
+
+<MudTable Items="@Employees" Hover="true" Loading="@_loading" Breakpoint="Breakpoint.Sm" Bordered=true LoadingProgressColor="Color.Info" Filter="new Func<EmpEmployeeDTO,bool>(FilterFunc1)" >
+     <ToolBarContent>
+        <MudText Typo="Typo.h6">Employees</MudText>
+        <MudSpacer />  
+         @*<MudIconButton Icon="@Icons.Material.Filled.Add" aria-label="Add" Color="Color.Success" Size="Size.Small"></MudIconButton>*@
+       
+        <MudSpacer />
+        <MudTextField @bind-Value="searchText" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>    
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Employee ID</MudTh>
+        <MudTh>Name</MudTh>
+        <MudTh Style="text-align:center">Status</MudTh>
+        <MudTh Style="text-align:center">Actions</MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Employee ID">@context.EmpId</MudTd>
+        <MudTd DataLabel="Name">@context.EmpFirstName  @context.EmpLastName</MudTd>
+        <MudTd DataLabel="Status" Style="text-align:center" >
+            @if (context.EmpStatus){
+
+                <MudIcon Icon=@Icons.Filled.CheckBox Color=Color.Success   ></MudIcon>            
+               
+            } 
+            else{
+                <MudIcon Icon=@Icons.Filled.DisabledByDefault Color=Color.Error  ></MudIcon>
+                }
+        </MudTd>
+        <MudTd DataLabel="Actions" Style="text-align:center" >  
+            <div class="d-flex justify-content-evenly align-items-center ">
+                <MudIconButton Icon="@Icons.Material.Filled.Edit" aria-label="Edit"
+                OnClick="@(()=> Edit(context.EmpId))"
+                Color="Color.Secondary" Size="Size.Small"></MudIconButton>
+
+                
+                @*<MudIconButton Icon="@Icons.Material.Filled.RemoveRedEye" aria-label="Details" Color="Color.Info" Size="Size.Small"></MudIconButton>*@
+                @*MudIconButton Icon="@Icons.Material.Filled.Delete" aria-label="Disable" 
+                Color="Color.Error"  Size="Size.Small" ></MudIconButton>*@
+
+            </div>
+
+        </MudTd>
+    </RowTemplate>
+    <PagerContent>
+        <MudTablePager />
+    </PagerContent>
+</MudTable>
+
+
+
+
+
+@code {
+    public List<EmpEmployeeDTO> Employees = new List<EmpEmployeeDTO>();
+    private bool _loading = true;
+    private string searchText = "";
+    private EmpEmployeeDTO Employee = new();
+
+
+    //getting employeelist
+    protected override async Task OnInitializedAsync()
+    {
+
+        await GetAllEmps();
+        _loading = false;
+    }
+
+    private async Task<List<EmpEmployeeDTO>> GetAllEmps()
+    {
+        Employees = await employeeservice.GetEmployees();
+        return Employees;
+    }
+
+    private void Edit(int empid)
+    {
+        Employee =  Employees.FirstOrDefault(x => x.EmpId == empid);
+    }
+
+    private async void SaveEmployee()
+    {
+        _loading = true;
+        employeeservice.InsertEmployee(Employee);
+        Snackbarz.Add("Employee saved",Severity.Success);
+        Employee.EmpId = 0;
+
+        await GetAllEmps();
+        _loading = false;
+        StateHasChanged();
+    }
+
+
+
+    //FFiltering
+    private bool FilterFunc1(EmpEmployeeDTO element) => FilterFunc(element, searchText);
+
+    private bool FilterFunc(EmpEmployeeDTO element, string searchText)
+    {
+        if (string.IsNullOrWhiteSpace(searchText))
+            return true;
+        if ($"{element.EmpFirstName} {element.EmpLastName} ".Contains(searchText))
+            return true;
+        return false;
+    }
+
+
+}
